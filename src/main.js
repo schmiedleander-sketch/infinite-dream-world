@@ -1,0 +1,12 @@
+import * as THREE from 'three';
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x221144,0.01);
+const camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth,window.innerHeight);
+document.body.appendChild(renderer.domElement);
+camera.position.z=30;
+const light=new THREE.PointLight(0xffffff,3);light.position.set(10,20,10);scene.add(light);
+const ambient=new THREE.AmbientLight(0x8888ff,2);scene.add(ambient);
+const objects=[];
+for(let i=0;i<40;i++){const island=new THREE.Mesh(new THREE.CylinderGeometry(5+Math.random()*5,1,4,8),new THREE.MeshStandardMaterial({color:Math.random()*0xffffff}));island.position.set((Math.random()-0.5)*200,(Math.random()-0.5)*100,(Math.random()-0.5)*100);scene.add(island);}for(let i=0;i<120;i++){const obj=new THREE.Mesh(new THREE.IcosahedronGeometry(Math.random()*2+0.5),new THREE.MeshStandardMaterial({color:Math.random()*0xffffff,emissive:Math.random()*0xffffff}));obj.position.set((Math.random()-0.5)*200,(Math.random()-0.5)*100,(Math.random()-0.5)*100);objects.push(obj);scene.add(obj);}const mouse={x:0,y:0};window.addEventListener('mousemove',e=>{mouse.x=(e.clientX/window.innerWidth)*2-1;mouse.y=-(e.clientY/window.innerHeight)*2+1;});function animate(){requestAnimationFrame(animate);objects.forEach(o=>{o.rotation.x+=0.01;o.rotation.y+=0.01;o.position.x+=(mouse.x*30-o.position.x)*0.002;o.position.y+=(mouse.y*30-o.position.y)*0.002;});renderer.render(scene,camera);}animate();
